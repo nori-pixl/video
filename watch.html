@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-  <p><a href="/">&larr; 一覧に戻る</a></p>
+  <p><a href="index.html">&larr; 一覧に戻る</a></p>
 
   <div id="video-area">読み込み中...</div>
 
@@ -57,7 +57,7 @@
         const v = await res.json();
 
         area.innerHTML = `
-          <video controls autoplay src="/stream/${v.id}"></video>
+          <video controls autoplay src="https://ave-helped-humanities-knee.trycloudflare.com/stream/${v.id}"></video>
           <div class="title" style="font-size:1.2rem;font-weight:bold;margin-top:8px;">${escapeHtml(v.title)}</div>
           <div class="meta">投稿者: ${escapeHtml(v.uploader_name || '名無し')} / ${escapeHtml(v.uploaded_at)}</div>
           ${v.description ? `<div class="description">${escapeHtml(v.description)}</div>` : ''}
@@ -71,7 +71,7 @@
     async function deleteVideo(id) {
       if (!confirm('この動画を削除しますか?(誰でも削除できます)')) return;
       try {
-        const res = await fetch(`/videos/${id}`, { method: 'DELETE' });
+        const res = await fetch(`https://ave-helped-humanities-knee.trycloudflare.com/videos/${id}`, { method: 'DELETE' });
         if (res.ok) {
           location.href = '/';
         } else {
@@ -97,7 +97,7 @@
       }
 
       try {
-        const res = await fetch(`/videos/${videoId}/comments`, {
+        const res = await fetch(`https://ave-helped-humanities-knee.trycloudflare.com/videos/${videoId}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content, username: nameInput.value.trim() }),
@@ -120,7 +120,7 @@
     async function loadComments() {
       const listEl = document.getElementById('comment-list');
       try {
-        const res = await fetch(`/videos/${videoId}/comments`);
+        const res = await fetch(`https://ave-helped-humanities-knee.trycloudflare.com/videos/${videoId}/comments`);
         const comments = await res.json();
 
         if (comments.length === 0) {
@@ -146,7 +146,7 @@
     async function deleteComment(id) {
       if (!confirm('このコメントを削除しますか?')) return;
       try {
-        const res = await fetch(`/comments/${id}`, { method: 'DELETE' });
+        const res = await fetch(`https://ave-helped-humanities-knee.trycloudflare.com/comments/${id}`, { method: 'DELETE' });
         if (res.ok) {
           loadComments();
         } else {
