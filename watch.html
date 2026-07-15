@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-  <p><a href="index.html">&larr; 一覧に戻る</a></p>
+  <p><a href="/">&larr; 一覧に戻る</a></p>
 
   <div id="video-area">読み込み中...</div>
 
@@ -34,6 +34,7 @@
   </div>
   <div id="comment-list">読み込み中...</div>
 
+  <script src="/config.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const videoId = params.get('id');
@@ -52,26 +53,30 @@
     async function loadVideo() {
       const area = document.getElementById('video-area');
       try {
-        const res = await fetch(`/videos/${videoId}`);
-        if (!res.ok) throw new Error('not found');
+        const res = await fetch(`${BACKEND_URL}/videos/${videoId}`);
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          area.innerHTML = `<p>動画情報の取得に失敗しました (status: ${res.status})</p><pre style="white-space:pre-wrap;font-size:0.75rem;color:#900;">${escapeHtml(text.slice(0, 500))}</pre>`;
+          return;
+        }
         const v = await res.json();
 
         area.innerHTML = `
-          <video controls autoplay src="https://distant-peripheral-registered-antibody.trycloudflare.com/stream/${v.id}"></video>
+          <video controls autoplay src="${BACKEND_URL}/stream/${v.id}"></video>
           <div class="title" style="font-size:1.2rem;font-weight:bold;margin-top:8px;">${escapeHtml(v.title)}</div>
           <div class="meta">投稿者: ${escapeHtml(v.uploader_name || '名無し')} / ${escapeHtml(v.uploaded_at)}</div>
           ${v.description ? `<div class="description">${escapeHtml(v.description)}</div>` : ''}
           <p><span class="del-link" onclick="deleteVideo('${v.id}')">この動画を削除</span></p>
         `;
       } catch (e) {
-        area.innerHTML = '<p>動画が見つかりませんでした。</p>';
+        area.innerHTML = '<p>通信エラー: ' + escapeHtml(e.message) + '</p>';
       }
     }
 
     async function deleteVideo(id) {
       if (!confirm('この動画を削除しますか?(誰でも削除できます)')) return;
       try {
-        const res = await fetch(`https://distant-peripheral-registered-antibody.trycloudflare.com/videos/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${BACKEND_URL}/videos/${id}`, { method: 'DELETE' });
         if (res.ok) {
           location.href = '/';
         } else {
@@ -97,7 +102,7 @@
       }
 
       try {
-        const res = await fetch(`https://distant-peripheral-registered-antibody.trycloudflare.com/videos/${videoId}/comments`, {
+        const res = await fetch(`${BACKEND_URL}/videos/${videoId}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content, username: nameInput.value.trim() }),
@@ -120,7 +125,14 @@
     async function loadComments() {
       const listEl = document.getElementById('comment-list');
       try {
-        const res = await fetch(`https://distant-peripheral-registered-antibody.trycloudflare.com/videos/${videoId}/comments`);
+        const res = await fetch(`${BACKEND_URL}/videos/${videoId}/comments`);
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          listEl.innerHTML = `<p>コメントの読み込みに失敗しました (status: ${res.status})</p><pre style="white-space:pre-wrap;font-size:0.75rem;color:#900;">${escapeHtml(text.slice(0, 500))}</pre>`;
+          return;
+        }
+
         const comments = await res.json();
 
         if (comments.length === 0) {
@@ -139,14 +151,14 @@
           </div>
         `).join('');
       } catch (e) {
-        listEl.innerHTML = '<p>コメントの読み込みに失敗しました。</p>';
+        listEl.innerHTML = '<p>通信エラー: ' + escapeHtml(e.message) + '</p>';
       }
     }
 
     async function deleteComment(id) {
       if (!confirm('このコメントを削除しますか?')) return;
       try {
-        const res = await fetch(`https://distant-peripheral-registered-antibody.trycloudflare.com/comments/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${BACKEND_URL}/comments/${id}`, { method: 'DELETE' });
         if (res.ok) {
           loadComments();
         } else {
