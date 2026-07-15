@@ -20,8 +20,9 @@
 </head>
 <body>
   <h1>nameBy.nori-pixl My Videoアップローダー</h1>
-
+<p>v1.2 匿名動画アップローダー</p><hr><br><p>v1.0 匿名動画アップローダー</p>
   <fieldset>
+     <a href="setumei.html">ルール(ちゃんと読むといいよ)</a>
     <legend>アップロード</legend>
 
     <form id="upload-form" method="POST" enctype="multipart/form-data">
@@ -46,11 +47,10 @@
       <div class="error-msg" id="upload-error"></div>
     </form>
   </fieldset>
-
   <h2>動画一覧</h2>
   <div id="video-list">読み込み中...</div>
 <hr>
-  <a href="setumei.html">ルール(ちゃんと読むといいよ)</a>
+ <h6>&copy nori-pixl</h6>
   <script src="/config.js"></script>
   <script>
     // 画面(Render)とバックエンド(PC)が別ドメインなので、送信先をBACKEND_URLで明示する
