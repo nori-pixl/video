@@ -24,7 +24,7 @@
   <fieldset>
     <legend>アップロード</legend>
 
-    <form id="upload-form" action="https://ave-helped-humanities-knee.trycloudflare.com/upload" method="POST" enctype="multipart/form-data">
+    <form id="upload-form" action="https://distant-peripheral-registered-antibody.trycloudflare.com/upload" method="POST" enctype="multipart/form-data">
       <label>投稿者名(任意、空なら「名無し」)</label>
       <input type="text" name="uploader_name" id="uploader-name-input">
 
@@ -58,7 +58,7 @@
     async function loadVideos() {
       const listEl = document.getElementById('video-list');
       try {
-        const res = await fetch('/videos');
+        const res = await fetch('https://distant-peripheral-registered-antibody.trycloudflare.com/videos');
         const videos = await res.json();
 
         if (videos.length === 0) {
@@ -67,8 +67,8 @@
         }
 
         listEl.innerHTML = videos.map(v => `
-          <div class="video-card" onclick="location.href='https://ave-helped-humanities-knee.trycloudflare.com/watch?id=${v.id}'">
-            <video preload="metadata" src="https://ave-helped-humanities-knee.trycloudflare.com/stream/${v.id}"></video>
+          <div class="video-card" onclick="location.href='https://distant-peripheral-registered-antibody.trycloudflare.com/watch?id=${v.id}'">
+            <video preload="metadata" src="https://distant-peripheral-registered-antibody.trycloudflare.com/stream/${v.id}"></video>
             <div class="title">${escapeHtml(v.title)}</div>
             <div class="meta">投稿者: ${escapeHtml(v.uploader_name || '名無し')} / ${escapeHtml(v.uploaded_at)}</div>
           </div>
