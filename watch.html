@@ -63,10 +63,12 @@
 
         area.innerHTML = `
           <video controls autoplay src="${BACKEND_URL}/stream/${v.id}"></video>
+          <h2>タイトル</h2>
           <div class="title" style="font-size:1.2rem;font-weight:bold;margin-top:8px;">${escapeHtml(v.title)}</div>
           <div class="meta">投稿者: ${escapeHtml(v.uploader_name || '名無し')} / ${escapeHtml(v.uploaded_at)}</div>
+          <h2>概要</h2>
           ${v.description ? `<div class="description">${escapeHtml(v.description)}</div>` : ''}
-          <p><span class="del-link" onclick="deleteVideo('${v.id}')">この動画を削除</span></p>
+          
         `;
       } catch (e) {
         area.innerHTML = '<p>通信エラー: ' + escapeHtml(e.message) + '</p>';
